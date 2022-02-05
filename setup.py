@@ -1,7 +1,7 @@
 from setuptools import find_packages, setup
 
 with open('requirements.txt') as f:
-    required_packages = f.read().splitlines()
+    required_packages = f.read()#.splitlines()
 
 setup(name='trading_tool',
       version='0.1',
