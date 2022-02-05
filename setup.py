@@ -1,5 +1,7 @@
 from setuptools import find_packages, setup
-from pip.req import parse_requirements
+
+with open('requirements.txt') as f:
+    required_packages = f.read().splitlines()
 
 setup(name='trading_tool',
       version='0.1',
@@ -9,6 +11,6 @@ setup(name='trading_tool',
       author_email='spice.algo.man@gmail.com',
       package_dir = {"": "trading_tool"},
       packages = find_packages(where="trading_tool"),
-      install_reqs = parse_requirements("requirements.txt")
+      install_reqs = required_packages,
       #packages=['trading_tool','trading_tool.stock_data_collector','trading_tool.backtester','trading_tool.trading_strategies'],
      )
