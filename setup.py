@@ -11,7 +11,8 @@ setup(name='trading_tool',
       author_email='spice.algo.man@gmail.com',
       package_dir = {"": "trading_tool"},
       packages = find_packages(where="trading_tool"),
-      install_requires = required_packages,
-      setup_requires = required_packages,
+      extras_require = {'build':required_packages}
+      #install_requires = required_packages,
+      #setup_requires = required_packages,
       #packages=['trading_tool','trading_tool.stock_data_collector','trading_tool.backtester','trading_tool.trading_strategies'],
      )
