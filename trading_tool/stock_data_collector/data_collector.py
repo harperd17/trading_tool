@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 import os
 import yfinance as yf
 import argparse
+import trading_tool
 from trading_tool.backtester import get_prior_data, get_stock_symbols, format_index, get_stock_data
 
 # set up the folder path
