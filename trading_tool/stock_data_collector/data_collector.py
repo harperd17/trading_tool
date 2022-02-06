@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import os
 import yfinance as yf
 import argparse
-from ..backtester.trading_utils import get_prior_data, get_stock_symbols, format_index, get_stock_data
+from backtester.trading_utils import get_prior_data, get_stock_symbols, format_index, get_stock_data
 
 # set up the folder path
 FOLDER_PATH = '/content/drive/MyDrive/Trading/Data'
