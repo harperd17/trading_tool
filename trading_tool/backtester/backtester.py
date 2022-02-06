@@ -5,7 +5,6 @@ from tradingFunctions import *
 """class to do back testing"""
 
 class trader:
-    #def __init__(self,entries,stops,targets):
     def __init__(self,data,strategy_class,params):
         #self.strategyFunction = strategyFunction
         #self.args = args
