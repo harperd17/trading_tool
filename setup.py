@@ -1,7 +1,11 @@
 from setuptools import find_packages, setup
+import pip
 
 with open('requirements.txt') as f:
     required_packages = f.read().splitlines()
+    
+for package in required_packages:
+    pip.main(['install', package])
 
 setup(name='trading_tool',
       version='0.1',
