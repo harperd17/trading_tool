@@ -1,5 +1,6 @@
 import pandas as pd
 import yfinance as yf
+from datetime import datetime
 
 def get_prior_data(file_path: str, fields: tuple = ('High','Low','Open','Close','Volume'),index_col: str = 'Date'):
   data = pd.read_csv(file_path,index_col=index_col)[list(fields)]
