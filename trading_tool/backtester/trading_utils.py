@@ -176,3 +176,12 @@ def break_data_into_chunks(data, trading_calendar):
   if running_total_length != data_shape[0]:
     raise ValueError('The sum of the chunks lengths is {} but the original data has length {}. David, you must figure out what happened and revise the "break_data_into_chunks" function accordingly.'.format(running_total_length,data_shape[0]))
   return data_chunks
+
+
+def get_exchange_calendar(exchange_name='NYSE', data = None, calendar_start_date = None, calendar_end_date = None):
+  exchange_calendar = mcal.get_calendar(exchange_name)
+  # if data is provided then infer the start and end dates from the data
+  if not data is None:
+    calendar_start_date = data.index.min()
+    calendar_end_date = data.index.max()
+  return exchange_calendar.schedule(start_date = calendar_start_date,end_date = calendar_end_date)
