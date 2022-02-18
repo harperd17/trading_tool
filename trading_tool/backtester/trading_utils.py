@@ -2,6 +2,7 @@ import pandas as pd
 import yfinance as yf
 from datetime import datetime
 import pandas_market_calendars as mcal
+import numpy as np
 
 
 def get_prior_data(file_path: str, fields: tuple = ('High','Low','Open','Close','Volume'),index_col: str = 'Date'):
