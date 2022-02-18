@@ -184,4 +184,4 @@ def get_exchange_calendar(data = None, exchange_name='NYSE', calendar_start_date
   if not data is None:
     calendar_start_date = data.index.min()
     calendar_end_date = data.index.max()
-  return exchange_calendar.schedule(start_date = calendar_start_date,end_date = calendar_end_date)
+  return correct_calendar(exchange_calendar.schedule(start_date = calendar_start_date,end_date = calendar_end_date))
