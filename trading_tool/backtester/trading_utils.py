@@ -178,7 +178,7 @@ def break_data_into_chunks(data, trading_calendar):
   return data_chunks
 
 
-def get_exchange_calendar(exchange_name='NYSE', data = None, calendar_start_date = None, calendar_end_date = None):
+def get_exchange_calendar(data = None, exchange_name='NYSE', calendar_start_date = None, calendar_end_date = None):
   exchange_calendar = mcal.get_calendar(exchange_name)
   # if data is provided then infer the start and end dates from the data
   if not data is None:
