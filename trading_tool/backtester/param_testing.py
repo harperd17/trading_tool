@@ -2,6 +2,11 @@ import optuna
 import pandas as pd
 import matplotlib.pyplot as plt
 
+# silence all the print outs from optuna
+# https://github.com/optuna/optuna/issues/1789
+# https://optuna.readthedocs.io/en/latest/faq.html#how-to-suppress-log-messages-of-optuna
+optuna.logging.set_verbosity(optuna.logging.WARNING)
+
 class ParameterOptimizer():
   def __init__(self):
     ...
