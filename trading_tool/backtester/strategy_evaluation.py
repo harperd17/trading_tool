@@ -113,3 +113,26 @@ def get_equity_curve_model(results):
       changes_only.append(equity_curve[i])
   equity_fit = sm.OLS(np.array(changes_only),sm.add_constant(np.array(range(len(changes_only))))).fit()
   return equity_fit
+
+
+def run_strategy(data, StrategyClass, analyzers, evaluation_func, strategy_params_dict = None, DataClass=bt.feeds.PandasData, cash_level=1000000.0, size = 100):
+  if not isinstance(data,list):
+    data=[data]
+  for dat in data:
+    # set up the cerebro
+    cerebro = bt.Cerebro()
+    #cerebro.adddata(DataClass(dataname = dat))
+    cerebro.adddata(bt.feeds.PandasData(dataname = dat))
+    cerebro.broker.setcash(cash_level)  
+    cerebro.addsizer(bt.sizers.SizerFix, stake=size)
+    if strategy_params_dict is None:
+      cerebro.addstrategy(StrategyClass)
+    else:
+      cerebro.addstrategy(StrategyClass, **strategy_params_dict)
+    #print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())
+    for analyzer_name in analyzers:
+      cerebro.addanalyzer(analyzers[analyzer_name], _name=analyzer_name)
+    run_result = cerebro.run()[0]
+    #print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
+    strategy_evaluation = evaluation_func(run_result)
+    return strategy_evaluation
