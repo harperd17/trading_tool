@@ -42,7 +42,7 @@ class EquityCurve(bt.analyzers.Analyzer):
       
       
       
- class BracketPrices(bt.analyzers.Analyzer):
+class BracketPrices(bt.analyzers.Analyzer):
   def get_analysis(self):
     return {'Limit Prices':self.limits,
             'Stop Prices':self.stops,
