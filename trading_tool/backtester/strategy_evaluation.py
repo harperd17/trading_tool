@@ -1,4 +1,5 @@
 import backtrader.analyzers as btanalyzers
+import statsmodels.api as sm
 
 
 # -------------------------------------analyser classes - these are used for building results as the strategies run
@@ -102,3 +103,13 @@ def get_rmse(results):
       changes_only.append(summary_results[i])
   equity_fit = sm.OLS(np.array(changes_only),sm.add_constant(np.array(range(len(changes_only))))).fit()
   return math.sqrt(equity_fit.mse_resid)
+
+def get_equity_curve_model(results):
+  equity_curve = get_equity_curve(results)
+  # get only the changes in value
+  changes_only = [list(equity_curve)[0]]
+  for i in range(1,len(equity_curve)):
+    if equity_curve[i] != equity_curve[i-1]:
+      changes_only.append(equity_curve[i])
+  equity_fit = sm.OLS(np.array(changes_only),sm.add_constant(np.array(range(len(changes_only))))).fit()
+  return equity_fit
