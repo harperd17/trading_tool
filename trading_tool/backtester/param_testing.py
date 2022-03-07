@@ -1,7 +1,7 @@
 import optuna
 import pandas as pd
 import matplotlib.pyplot as plt
-from trading_tool.backtester.strategy_evaluation import report_strategy_metrics, run_strategy
+from trading_tool.backtester.strategy_evaluation import report_strategy_metrics, run_strategy, get_equity_curve
 
 # silence all the print outs from optuna
 # https://github.com/optuna/optuna/issues/1789
