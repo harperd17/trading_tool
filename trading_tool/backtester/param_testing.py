@@ -12,7 +12,7 @@ class ParameterOptimizer():
   def __init__(self):
     ...
 
-  def get_optimized_parameters(self, training_sets, validation_sets, StrategyClass, evaluation_func, optimization_func, params, sizing_func, initial_cash = 1000000, unique_validation_sets=True, direction='minimize', n_trials=50, strategy_report = report_strategy_metrics):
+  def get_optimized_parameters(self, training_sets, validation_sets, StrategyClass, evaluation_func, optimization_func, params, sizing_func, analyzers, initial_cash = 1000000, unique_validation_sets=True, direction='minimize', n_trials=50, strategy_report = report_strategy_metrics):
     self.optimal_params_list = []
     self.params = params
     if unique_validation_sets:
