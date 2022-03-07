@@ -1,4 +1,4 @@
-import backtrader.analyzers as btanalyzers
+import backtrader as bt
 import statsmodels.api as sm
 
 
