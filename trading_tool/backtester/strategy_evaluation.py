@@ -1,6 +1,7 @@
 import backtrader as bt
 import statsmodels.api as sm
 import pandas as pd
+import numpy as np
 
 
 # -------------------------------------analyser classes - these are used for building results as the strategies run
