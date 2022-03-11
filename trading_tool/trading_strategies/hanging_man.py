@@ -1,7 +1,7 @@
 import backtrader as bt
 
 
-class HangingManStrategy(bt.Strategy):
+class HangingManContinuationStrategy(bt.Strategy):
 
     params = (
         ('min_long_wick_ratio',2.0),
@@ -53,6 +53,61 @@ class HangingManStrategy(bt.Strategy):
             self.bar_openings.append(self.current_bar)
 
         self.current_bar += 1
+        
+        
+class HangingManReversalStrategy(bt.Strategy):
+
+    params = (
+        ('min_long_wick_ratio',2.0),
+        ('max_short_wick_ratio',1.0),
+        ('risk_to_reward_ratio',2.0),
+        ('fill_ratio',1.5)
+    )
+
+    def __init__(self):#, min_long_wick_ratio, max_short_wick_ratio, risk_to_reward_ratio):
+        # Keep a reference to the "close" line in the data[0] dataseries
+        self.data_close = self.datas[0].close
+        self.data_open = self.datas[0].open
+        self.data_high = self.datas[0].high
+        self.data_low = self.datas[0].low
+
+        self.entries = []
+        self.limits = []
+        self.stops = []
+
+        self.bar_openings = []
+
+        self.current_bar = 1
+
+    def next(self):
+        data_body_width = self.data_close[0] - self.data_open[0]
+        if data_body_width != 0:
+          if ((self.data_high[0] - max(self.data_open[0],self.data_close[0]))/abs(data_body_width) >= self.params.min_long_wick_ratio
+              and ((min(self.data_open[0],self.data_close[0]) - self.data_low[0])/abs(data_body_width)) <= self.params.max_short_wick_ratio):
+            # enter short bracket
+            limit_price = self.data_close[0] - (self.data_high[0] - self.data_close[0])*self.params.fill_ratio
+            stop_price = self.data_close[0] + (limit_price-self.data_close[0])/self.params.risk_to_reward_ratio
+
+            bracket_setll = self.sell_bracket(limitprice=limit_price, stopprice=stop_price)
+            # record the trade prices
+            self.limits.append(limit_price)
+            self.stops.append(stop_price)
+            self.bar_openings.append(self.current_bar)
+
+          elif ((self.data_high[0] - max(self.data_open[0],self.data_close[0]))/abs(data_body_width) <= self.params.max_short_wick_ratio
+              and ((min(self.data_open[0],self.data_close[0]) - self.data_low[0])/abs(data_body_width)) >= self.params.min_long_wick_ratio):
+            # enter long bracket
+            limit_price = self.data_close[0] + (self.data_close[0] - self.data_low[0])*self.params.fill_ratio
+            stop_price = self.data_close[0] - (self.data_close[0] - limit_price)/self.params.risk_to_reward_ratio
+
+            bracket_buy = self.buy_bracket(limitprice=limit_price, stopprice=stop_price)
+            # record the trade prices
+            self.limits.append(limit_price)
+            self.stops.append(stop_price)
+            self.bar_openings.append(self.current_bar)
+
+        self.current_bar += 1
+
 
 # # -*- coding: utf-8 -*-
 # """
