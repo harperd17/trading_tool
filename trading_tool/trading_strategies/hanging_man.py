@@ -26,31 +26,35 @@ class HangingManContinuationStrategy(bt.Strategy):
         self.current_bar = 1
 
     def next(self):
-        data_body_width = self.data_close[0] - self.data_open[0]
+        data_body_width = abs(self.data_close[0] - self.data_open[0])
+        upper_wick = self.data_high[0]-max(self.data_open[0],self.data_close[0])
+        lower_wick = min(self.data_close[0],self.data_open[0]) - self.data_low[0]
         if data_body_width != 0:
-          if ((self.data_high[0] - max(self.data_open[0],self.data_close[0]))/abs(data_body_width) >= self.params.min_long_wick_ratio
-              and ((min(self.data_open[0],self.data_close[0]) - self.data_low[0])/abs(data_body_width)) <= self.params.max_short_wick_ratio):
-            # enter long bracket
-            limit_price = self.data_close[0] + (self.data_high[0] - self.data_close[0])*self.params.fill_ratio
-            stop_price = self.data_close[0] - (limit_price-self.data_close[0])/self.params.risk_to_reward_ratio
+            if upper_wick/data_body_width >= self.params.min_long_wick_ratio and lower_wick/data_body_width <= self.params.max_short_wick_ratio:
+#           if ((self.data_high[0] - max(self.data_open[0],self.data_close[0]))/abs(data_body_width) >= self.params.min_long_wick_ratio
+#               and ((min(self.data_open[0],self.data_close[0]) - self.data_low[0])/abs(data_body_width)) <= self.params.max_short_wick_ratio):
+                # enter long bracket
+                limit_price = self.data_close[0] + (self.data_high[0] - self.data_close[0])*self.params.fill_ratio
+                stop_price = self.data_close[0] - (limit_price-self.data_close[0])/self.params.risk_to_reward_ratio
 
-            bracket_buy = self.buy_bracket(limitprice=limit_price, stopprice=stop_price)
-            # record the trade prices
-            self.limits.append(limit_price)
-            self.stops.append(stop_price)
-            self.bar_openings.append(self.current_bar)
+                bracket_buy = self.buy_bracket(limitprice=limit_price, stopprice=stop_price)
+                # record the trade prices
+                self.limits.append(limit_price)
+                self.stops.append(stop_price)
+                self.bar_openings.append(self.current_bar)
+           
+            elif lower_wick/data_body_width >= self.params.min_long_wick_ratio and upper_wick/data_body_width <= self.params.max_short_wick_ratio:
+#           elif ((self.data_high[0] - max(self.data_open[0],self.data_close[0]))/abs(data_body_width) <= self.params.max_short_wick_ratio
+#               and ((min(self.data_open[0],self.data_close[0]) - self.data_low[0])/abs(data_body_width)) >= self.params.min_long_wick_ratio):
+                # enter short bracket
+                limit_price = self.data_close[0] - (self.data_close[0] - self.data_low[0])*self.params.fill_ratio
+                stop_price = self.data_close[0] + (self.data_close[0] - limit_price)/self.params.risk_to_reward_ratio
 
-          elif ((self.data_high[0] - max(self.data_open[0],self.data_close[0]))/abs(data_body_width) <= self.params.max_short_wick_ratio
-              and ((min(self.data_open[0],self.data_close[0]) - self.data_low[0])/abs(data_body_width)) >= self.params.min_long_wick_ratio):
-            # enter short bracket
-            limit_price = self.data_close[0] - (self.data_close[0] - self.data_low[0])*self.params.fill_ratio
-            stop_price = self.data_close[0] + (self.data_close[0] - limit_price)/self.params.risk_to_reward_ratio
-
-            bracket_sell = self.sell_bracket(limitprice=limit_price, stopprice=stop_price)
-            # record the trade prices
-            self.limits.append(limit_price)
-            self.stops.append(stop_price)
-            self.bar_openings.append(self.current_bar)
+                bracket_sell = self.sell_bracket(limitprice=limit_price, stopprice=stop_price)
+                # record the trade prices
+                self.limits.append(limit_price)
+                self.stops.append(stop_price)
+                self.bar_openings.append(self.current_bar)
 
         self.current_bar += 1
         
