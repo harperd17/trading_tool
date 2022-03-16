@@ -116,7 +116,7 @@ def report_strategy_metrics(results):
 #   if 'won' not in list(trade_analysis.keys()): # only losing trades
 #     return_df['Win Rate'] = 0
 #   else: # regular scenario
-  return_df['Win Rate'] = trade_analysis['won']['total']/(trade_analysis['won']['total']+trade_analysis['lost']['total'])
+  return_df['Win Rate'] = trade_analysis['won']['total']/max(1,trade_analysis['won']['total']+trade_analysis['lost']['total'])
   return return_df
 
 def get_rmse(results):
