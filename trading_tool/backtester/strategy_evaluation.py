@@ -108,14 +108,14 @@ def report_strategy_metrics(results):
   return_df = pd.DataFrame({'Sharpe Ratio':[sharpe_ratio],'Profit Factor':profit_factor,
                        'PNL':dict(trade_analysis)['pnl']['gross']['total'],
                        'Percent Return':dict(trade_analysis)['pnl']['gross']['total']/equity_pd.iloc[0]['Value'],
-                       'Total Trades':dict(trade_analysis)['len']['total'],
+                       'Total Trades':trade_analysis['long']['total'] + trade_analysis['short']['total'],
                         'Long PNL':dict(trade_analysis)['long']['pnl']['total'],
                         'Short PNL':dict(trade_analysis)['short']['pnl']['total']})
   
 #   if 'won' not in list(trade_analysis.keys()): # only losing trades
 #     return_df['Win Rate'] = 0
 #   else: # regular scenario
-  return_df['Win Rate'] = dict(trade_analysis)['won']['total']/dict(trade_analysis)['total']['total']
+  return_df['Win Rate'] = trade_analysis['won']['total']/(trade_analysis['won']['total']+trade_analysis['lost']['total'])
   return return_df
 
 def get_rmse(results):
