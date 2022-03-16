@@ -13,12 +13,9 @@ def long_criteria(d, min_top_wick_ratio, max_bottom_wick_ratio):
 
   d['upper_wick_ratio'] = d['upper_wick']/d['body_width']
   d['lower_wick_ratio'] = d['lower_wick']/d['body_width']
-  d['long_upper_wick'] = (d['upper_wick_ratio'] >= min_top_wick_ratio).astype(bool)
-  d['short_lower_wick'] = (d['lower_wick_ratio'] <= max_bottom_wick_ratio).astype(bool)
-  print(~(d['body_width']==0))
-  print(d['long_upper_wick'])
-  print(d['short_lower_wick'])
-  d['enter_trade'] = ~(d['body_width']==0) & (d['long_upper_wick']) & (d['short_lower_wick'])
+  d['long_upper_wick'] = (d['upper_wick_ratio'] >= min_top_wick_ratio)
+  d['short_lower_wick'] = (d['lower_wick_ratio'] <= max_bottom_wick_ratio)
+  d['enter_trade'] = (~(d['body_width']==0)).astype(bool) & (d['long_upper_wick']).astype(bool) & (d['short_lower_wick']).astype(bool)
   return d['enter_trade']
 
 
