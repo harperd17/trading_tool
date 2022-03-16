@@ -24,12 +24,7 @@ class EnteredTrades(bt.analyzers.Analyzer):
   def get_analysis(self):
     return({'Opening Bars':self.opening_bars,
             'Closing Bars':self.closing_bars,
-            'PNL':self.pnls})
-  
-  def get_entered_trades(results):
-    entered_trades = results.analyzers.entered_trades.get_analysis()
-    return pd.DataFrame(entered_trades)
-    
+            'PNL':self.pnls})    
   
 # https://community.backtrader.com/topic/2855/how-does-the-backtrader-get-the-cash-or-value-of-each-step/2?_=1645635013496
 class EquityCurve(bt.analyzers.Analyzer):
@@ -72,7 +67,11 @@ def get_trade_analysis(results):
     final_trade_analysis.update(trade_analysis)
     return final_trade_analysis
 
-
+def get_entered_trades(results):
+    entered_trades = results.analyzers.entered_trades.get_analysis()
+    return pd.DataFrame(entered_trades)
+  
+  
 def profit_factor_evaluation(results):
   # trade_analysis = results.analyzers.trade_analysis.get_analysis()
   trade_analysis = get_trade_analysis(results)
