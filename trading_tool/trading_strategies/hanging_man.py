@@ -54,6 +54,9 @@ class HangingManContinuationStrategy(bt.Strategy):
 
         self.current_bar += 1
         
+    def return_strategy_recordings(self):
+        return pd.DataFrame({'Opening Bars':self.bar_openings,'Limit Prices':self.limits,'Stop Prices':self.stops})
+        
         
 class HangingManReversalStrategy(bt.Strategy):
 
@@ -107,6 +110,10 @@ class HangingManReversalStrategy(bt.Strategy):
             self.bar_openings.append(self.current_bar)
 
         self.current_bar += 1
+        
+    def return_strategy_recordings(self):
+        return pd.DataFrame({'Opening Bars':self.bar_openings,'Limit Prices':self.limits,'Stop Prices':self.stops})
+
 
 
 # # -*- coding: utf-8 -*-
