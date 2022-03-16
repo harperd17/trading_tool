@@ -77,14 +77,14 @@ class BracketPrices(bt.analyzers.Analyzer):
 def profit_factor_evaluation(results):
   # trade_analysis = results.analyzers.trade_analysis.get_analysis()
   trade_analysis = get_trade_analysis(results)
-#   if 'won' not in list(trade_analysis.keys()) and 'lost' not in list(trade_analysis.keys()): # zero trades
-#     return 0
-#   elif 'won' not in list(trade_analysis.keys()): # only losing trades
-#     return 0
-#   elif 'lost' not in list(trade_analysis.keys()): # only winning trades
-#     return dict(trade_analysis)['won']['pnl']['total']
-#   else: # regular scenario - winning and losing trades
-  return trade_analysis['won']['pnl']['total']/max(1,abs(trade_analysis['lost']['pnl']['total'])
+  # if 'won' not in list(trade_analysis.keys()) and 'lost' not in list(trade_analysis.keys()): # zero trades
+  #   return 0
+  # elif 'won' not in list(trade_analysis.keys()): # only losing trades
+  #   return 0
+  # elif 'lost' not in list(trade_analysis.keys()): # only winning trades
+  #   return dict(trade_analysis)['won']['pnl']['total']
+  # else: # regular scenario - winning and losing trades
+  return trade_analysis['won']['pnl']['total']/max(1,abs(trade_analysis['lost']['pnl']['total']))
   
   
 def pnl_evaluation(results):
