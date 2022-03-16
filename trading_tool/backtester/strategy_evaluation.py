@@ -156,7 +156,7 @@ def run_strategy(data, StrategyClass, analyzers, evaluation_func, strategy_param
       cerebro.addstrategy(StrategyClass, **strategy_params_dict)
     #print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())
     for analyzer_name in analyzers:
-      cerebro.addanalyzer(deepcopy(analyzers[analyzer_name], _name=analyzer_name))
+      cerebro.addanalyzer(deepcopy(analyzers[analyzer_name]), _name=analyzer_name)
     run_result = cerebro.run()[0]
     #print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
     strategy_evaluation = evaluation_func(run_result)
