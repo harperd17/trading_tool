@@ -26,6 +26,27 @@ class EnteredTrades(bt.analyzers.Analyzer):
             'Closing Bars':self.closing_bars,
             'PNL':self.pnls})
   
+  def get_entered_trades(results):
+    entered_trades = results.analyzers.entered_trades.get_analysis()
+    return pd.DataFrame(entered_trades)
+
+  
+  
+  def get_trade_analysis(results):
+    trade_analysis_format = {
+      'won':{'pnl':{'total':0},'total':0},
+      'lost':{'pnl':{'total':0},'total':0},
+      'pnl':{'gross':{'total':0}},
+      'len':{'total':0},
+      'long':{'pnl':{'total':0}},
+      'short':{'pnl':{'total':0}},
+    }
+    final_trade_analysis = trade_analysis_format.copy()    
+    trade_analysis = dict(results.analyzers.trade_analysis.get_analysis())
+    final_trade_analysis.update(trade_analysis)
+    return final_trade_analysis
+    
+  
 # https://community.backtrader.com/topic/2855/how-does-the-backtrader-get-the-cash-or-value-of-each-step/2?_=1645635013496
 class EquityCurve(bt.analyzers.Analyzer):
     """
@@ -54,20 +75,22 @@ class BracketPrices(bt.analyzers.Analyzer):
 #-------------------------evaluation functions - these use the results from the strategy-------------------------
 
 def profit_factor_evaluation(results):
-  trade_analysis = results.analyzers.trade_analysis.get_analysis()
-  if 'won' not in list(trade_analysis.keys()) and 'lost' not in list(trade_analysis.keys()): # zero trades
-    return 0
-  elif 'won' not in list(trade_analysis.keys()): # only losing trades
-    return 0
-  elif 'lost' not in list(trade_analysis.keys()): # only winning trades
-    return dict(trade_analysis)['won']['pnl']['total']
-  else: # regular scenario - winning and losing trades
-    return dict(trade_analysis)['won']['pnl']['total']/max(1,abs(dict(trade_analysis)['lost']['pnl']['total']))
+  # trade_analysis = results.analyzers.trade_analysis.get_analysis()
+  trade_analysis = get_trade_analysis(results)
+#   if 'won' not in list(trade_analysis.keys()) and 'lost' not in list(trade_analysis.keys()): # zero trades
+#     return 0
+#   elif 'won' not in list(trade_analysis.keys()): # only losing trades
+#     return 0
+#   elif 'lost' not in list(trade_analysis.keys()): # only winning trades
+#     return dict(trade_analysis)['won']['pnl']['total']
+#   else: # regular scenario - winning and losing trades
+    return trade_analysis['won']['pnl']['total']/max(1,abs(trade_analysis['lost']['pnl']['total']))
   
   
 def pnl_evaluation(results):
-  trade_analysis = results.analyzers.trade_analysis.get_analysis()
-  return dict(trade_analysis)['pnl']['gross']['total']
+  # trade_analysis = results.analyzers.trade_analysis.get_analysis()
+  trade_analysis = get_trade_analysis(results)
+  return trade_analysis['pnl']['gross']['total']
 
 def get_equity_curve(results):
   equity_curve = results.analyzers.equity_curve.get_analysis()['Equity Curve']
@@ -77,7 +100,8 @@ def get_equity_curve(results):
 
 def report_strategy_metrics(results):
   sharpe_ratio = dict(results.analyzers.mysharpe.get_analysis())['sharperatio']
-  trade_analysis = results.analyzers.trade_analysis.get_analysis()
+#   trade_analysis = results.analyzers.trade_analysis.get_analysis()
+  trade_analysis = get_trade_analysis(results)
   profit_factor = profit_factor_evaluation(results)#abs(dict(trade_analysis)['won']['pnl']['total'])/max(1,abs(dict(trade_analysis)['lost']['pnl']['total']))
   equity_curve = results.analyzers.equity_curve.get_analysis()['Equity Curve']
   equity_pd = pd.DataFrame(equity_curve).T
@@ -90,10 +114,10 @@ def report_strategy_metrics(results):
                         'Long PNL':dict(trade_analysis)['long']['pnl']['total'],
                         'Short PNL':dict(trade_analysis)['short']['pnl']['total']})
   
-  if 'won' not in list(trade_analysis.keys()): # only losing trades
-    return_df['Win Rate'] = 0
-  else: # regular scenario
-    return_df['Win Rate'] = dict(trade_analysis)['won']['total']/dict(trade_analysis)['total']['total']
+#   if 'won' not in list(trade_analysis.keys()): # only losing trades
+#     return_df['Win Rate'] = 0
+#   else: # regular scenario
+  return_df['Win Rate'] = dict(trade_analysis)['won']['total']/dict(trade_analysis)['total']['total']
   return return_df
 
 def get_rmse(results):
