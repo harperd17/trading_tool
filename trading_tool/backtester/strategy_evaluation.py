@@ -84,7 +84,7 @@ def profit_factor_evaluation(results):
 #   elif 'lost' not in list(trade_analysis.keys()): # only winning trades
 #     return dict(trade_analysis)['won']['pnl']['total']
 #   else: # regular scenario - winning and losing trades
-    return trade_analysis['won']['pnl']['total']/max(1,abs(trade_analysis['lost']['pnl']['total']))
+    return trade_analysis['won']['pnl']['total']/max(1,abs(trade_analysis['lost']['pnl']['total'])
   
   
 def pnl_evaluation(results):
