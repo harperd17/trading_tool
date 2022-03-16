@@ -34,10 +34,10 @@ class ParameterOptimizer():
 
       study = optuna.create_study(direction=direction)
       study.optimize(fold_objective, n_trials=n_trials) 
-      self.optimal_params_list.append(study.best_params)
+      self.optimal_params_list.append(study.best_params.copy())
 
       fold_metrics = run_strategy(validation_fold.copy(), StrategyClass, analyzers, report_strategy_metrics, cash_level =cash_level, size = sizing_func(cash_level, validation_fold), strategy_params_dict=study.best_params)
-      self.strategy_metrics_list.append(fold_metrics)
+      self.strategy_metrics_list.append(fold_metrics.copy())
       validation_equity_curve = run_strategy(validation_fold.copy(), StrategyClass, analyzers, get_equity_curve, cash_level = cash_level, size = sizing_func(cash_level, validation_fold), strategy_params_dict=study.best_params)
       if unique_validation_sets:
         self.equity_curves.append(validation_equity_curve)
