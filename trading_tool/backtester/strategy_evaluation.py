@@ -29,22 +29,6 @@ class EnteredTrades(bt.analyzers.Analyzer):
   def get_entered_trades(results):
     entered_trades = results.analyzers.entered_trades.get_analysis()
     return pd.DataFrame(entered_trades)
-
-  
-  
-  def get_trade_analysis(results):
-    trade_analysis_format = {
-      'won':{'pnl':{'total':0},'total':0},
-      'lost':{'pnl':{'total':0},'total':0},
-      'pnl':{'gross':{'total':0}},
-      'len':{'total':0},
-      'long':{'pnl':{'total':0}},
-      'short':{'pnl':{'total':0}},
-    }
-    final_trade_analysis = trade_analysis_format.copy()    
-    trade_analysis = dict(results.analyzers.trade_analysis.get_analysis())
-    final_trade_analysis.update(trade_analysis)
-    return final_trade_analysis
     
   
 # https://community.backtrader.com/topic/2855/how-does-the-backtrader-get-the-cash-or-value-of-each-step/2?_=1645635013496
@@ -73,6 +57,21 @@ class BracketPrices(bt.analyzers.Analyzer):
   
   
 #-------------------------evaluation functions - these use the results from the strategy-------------------------
+
+def get_trade_analysis(results):
+    trade_analysis_format = {
+      'won':{'pnl':{'total':0},'total':0},
+      'lost':{'pnl':{'total':0},'total':0},
+      'pnl':{'gross':{'total':0}},
+      'len':{'total':0},
+      'long':{'pnl':{'total':0}},
+      'short':{'pnl':{'total':0}},
+    }
+    final_trade_analysis = trade_analysis_format.copy()    
+    trade_analysis = dict(results.analyzers.trade_analysis.get_analysis())
+    final_trade_analysis.update(trade_analysis)
+    return final_trade_analysis
+
 
 def profit_factor_evaluation(results):
   # trade_analysis = results.analyzers.trade_analysis.get_analysis()
