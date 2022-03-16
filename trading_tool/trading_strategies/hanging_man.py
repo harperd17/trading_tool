@@ -1,4 +1,39 @@
 import backtrader as bt
+import pandas as pd
+
+
+def long_criteria(d, min_top_wick_ratio, max_bottom_wick_ratio):
+  d['body_width'] = abs(d['Close']-d['Open'])
+  if isinstance(d,pd.DataFrame):
+    d['upper_wick'] = d['High'] - d[['Close','Open']].max(axis=1)
+    d['lower_wick'] = d[['Close','Open']].min(axis=1) - d['Low']
+  else:
+    d['upper_wick'] = d['High'] - d[['Close','Open']].max()
+    d['lower_wick'] = d[['Close','Open']].min() - d['Low']
+
+  d['upper_wick_ratio'] = d['upper_wick']/d['body_width']
+  d['lower_wick_ratio'] = d['lower_wick']/d['body_width']
+  d['long_upper_wick'] = d['upper_wick_ratio'] >= min_top_wick_ratio
+  d['short_lower_wick'] = d['lower_wick_ratio'] <= max_bottom_wick_ratio
+  d['enter_trade'] = ~(d['body_width']==0) & (d['long_upper_wick']) & (d['short_lower_wick'])
+  return d['enter_trade']
+
+
+def short_criteria(d, min_bottom_wick_ratio, max_top_wick_ratio):
+  d['body_width'] = abs(d['Close']-d['Open'])
+  if isinstance(d,pd.DataFrame):
+    d['upper_wick'] = d['High'] - d[['Close','Open']].max(axis=1)
+    d['lower_wick'] = d[['Close','Open']].min(axis=1) - d['Low']
+  else:
+    d['upper_wick'] = d['High'] - d[['Close','Open']].max()
+    d['lower_wick'] = d[['Close','Open']].min() - d['Low']
+
+  d['upper_wick_ratio'] = d['upper_wick']/d['body_width']
+  d['lower_wick_ratio'] = d['lower_wick']/d['body_width']
+  d['short_upper_wick'] = d['upper_wick_ratio'] <= max_top_wick_ratio
+  d['long_lower_wick'] = d['lower_wick_ratio'] >= min_bottom_wick_ratio
+  d['enter_trade'] = ~(d['body_width']==0) & (d['short_upper_wick']) & (d['long_lower_wick'])
+  return d['enter_trade']
 
 
 class HangingManContinuationStrategy(bt.Strategy):
@@ -26,13 +61,15 @@ class HangingManContinuationStrategy(bt.Strategy):
         self.current_bar = 1
 
     def next(self):
-        data_body_width = abs(self.data_close[0] - self.data_open[0])
-        upper_wick = self.data_high[0]-max(self.data_open[0],self.data_close[0])
-        lower_wick = min(self.data_close[0],self.data_open[0]) - self.data_low[0]
-        if data_body_width != 0:
-            if upper_wick/data_body_width >= self.params.min_long_wick_ratio and lower_wick/data_body_width <= self.params.max_short_wick_ratio:
-#           if ((self.data_high[0] - max(self.data_open[0],self.data_close[0]))/abs(data_body_width) >= self.params.min_long_wick_ratio
-#               and ((min(self.data_open[0],self.data_close[0]) - self.data_low[0])/abs(data_body_width)) <= self.params.max_short_wick_ratio):
+            data_line = pd.Series([self.data_close[0],self.data_open[0],self.data_high[0],self.data_low[0]], index = ['Close','Open','High','Low'])
+#         data_body_width = abs(self.data_close[0] - self.data_open[0])
+#         upper_wick = self.data_high[0]-max(self.data_open[0],self.data_close[0])
+#         lower_wick = min(self.data_close[0],self.data_open[0]) - self.data_low[0]
+#         if data_body_width != 0:
+#             if upper_wick/data_body_width >= self.params.min_long_wick_ratio and lower_wick/data_body_width <= self.params.max_short_wick_ratio:
+# #           if ((self.data_high[0] - max(self.data_open[0],self.data_close[0]))/abs(data_body_width) >= self.params.min_long_wick_ratio
+# #               and ((min(self.data_open[0],self.data_close[0]) - self.data_low[0])/abs(data_body_width)) <= self.params.max_short_wick_ratio):
+            if long_criteria(data_line, self.params.min_long_wick_ratio, self.params.max_short_wick_ratio):
                 # enter long bracket
                 limit_price = self.data_close[0] + (self.data_high[0] - self.data_close[0])*self.params.fill_ratio
                 stop_price = self.data_close[0] - (limit_price-self.data_close[0])/self.params.risk_to_reward_ratio
@@ -42,8 +79,10 @@ class HangingManContinuationStrategy(bt.Strategy):
                 self.limits.append(limit_price)
                 self.stops.append(stop_price)
                 self.bar_openings.append(self.current_bar)
-           
-            elif lower_wick/data_body_width >= self.params.min_long_wick_ratio and upper_wick/data_body_width <= self.params.max_short_wick_ratio:
+                
+                
+            elif short_criteria(data_line, self.params.min_long_wick_ratio, self.params.max_short_wick_ratio):
+            # elif lower_wick/data_body_width >= self.params.min_long_wick_ratio and upper_wick/data_body_width <= self.params.max_short_wick_ratio:
 #           elif ((self.data_high[0] - max(self.data_open[0],self.data_close[0]))/abs(data_body_width) <= self.params.max_short_wick_ratio
 #               and ((min(self.data_open[0],self.data_close[0]) - self.data_low[0])/abs(data_body_width)) >= self.params.min_long_wick_ratio):
                 # enter short bracket
