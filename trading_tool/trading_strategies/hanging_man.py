@@ -95,7 +95,7 @@ class HangingManContinuationStrategy(bt.Strategy):
                 self.stops.append(stop_price)
                 self.bar_openings.append(self.current_bar)
 
-        self.current_bar += 1
+            self.current_bar += 1
         
     def return_strategy_recordings(self):
         return pd.DataFrame({'Opening Bars':self.bar_openings,'Limit Prices':self.limits,'Stop Prices':self.stops})
