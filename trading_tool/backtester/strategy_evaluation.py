@@ -60,8 +60,8 @@ def get_trade_analysis(results):
       'lost':{'pnl':{'total':0},'total':0},
       'pnl':{'gross':{'total':0}},
       'len':{'total':0},
-      'long':{'pnl':{'total':0}},
-      'short':{'pnl':{'total':0}},
+      'long':{'pnl':{'total':0},'total':0},
+      'short':{'pnl':{'total':0},'total':0},
     }
     final_trade_analysis = trade_analysis_format.copy()    
     trade_analysis = dict(results.analyzers.trade_analysis.get_analysis())
