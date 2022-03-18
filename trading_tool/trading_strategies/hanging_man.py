@@ -3,39 +3,53 @@ import pandas as pd
 
 
 def long_criteria(d, min_top_wick_ratio, max_bottom_wick_ratio):
-  d['body_width'] = abs(d['Close']-d['Open'])
   if isinstance(d,pd.DataFrame):
+    d['body_width'] = (d['Close']-d['Open']).abs()
     d['upper_wick'] = d['High'] - d[['Close','Open']].max(axis=1)
     d['lower_wick'] = d[['Close','Open']].min(axis=1) - d['Low']
+    d['upper_wick_ratio'] = d['upper_wick']/d['body_width']
+    d['lower_wick_ratio'] = d['lower_wick']/d['body_width']
+    d['long_upper_wick'] = (d['upper_wick_ratio'] >= min_top_wick_ratio)
+    d['short_lower_wick'] = (d['lower_wick_ratio'] <= max_bottom_wick_ratio)
+    d = d.replace(np.nan,0)
+    d['enter_trade'] = (~(d['body_width']==0)).astype(bool) & (d['long_upper_wick']).astype(bool) & (d['short_lower_wick']).astype(bool)
+    return d['enter_trade']
   else:
-    d['upper_wick'] = d['High'] - d[['Close','Open']].max()
-    d['lower_wick'] = d[['Close','Open']].min() - d['Low']
+    body_width = abs(d['Close']-d['Open'])
+    if body_width == 0:
+      return False
+    upper_wick = d['High'] -max(d['Close'],d['Open'])
+    lower_wick = min(d['Close'],d['Open']) - d['Low']
+    upper_wick_ratio = upper_wick/body_width
+    lower_wick_ratio = lower_wick/body_width
+    return body_width != 0 and upper_wick_ratio >= min_top_wick_ratio and lower_wick_ratio <= max_bottom_wick_ratio
 
-  d['upper_wick_ratio'] = d['upper_wick']/d['body_width']
-  d['lower_wick_ratio'] = d['lower_wick']/d['body_width']
-  d['long_upper_wick'] = (d['upper_wick_ratio'] >= min_top_wick_ratio)
-  d['short_lower_wick'] = (d['lower_wick_ratio'] <= max_bottom_wick_ratio)
-  d['enter_trade'] = (~(d['body_width']==0)).astype(bool) & (d['long_upper_wick']).astype(bool) & (d['short_lower_wick']).astype(bool)
-  return d['enter_trade']
+  
 
 
 def short_criteria(d, min_bottom_wick_ratio, max_top_wick_ratio):
-  d['body_width'] = abs(d['Close']-d['Open'])
   if isinstance(d,pd.DataFrame):
+    d['body_width'] = (d['Close']-d['Open']).abs()
     d['upper_wick'] = d['High'] - d[['Close','Open']].max(axis=1)
     d['lower_wick'] = d[['Close','Open']].min(axis=1) - d['Low']
+    d['upper_wick_ratio'] = d['upper_wick']/d['body_width']
+    d['lower_wick_ratio'] = d['lower_wick']/d['body_width']
+    d['short_upper_wick'] = d['upper_wick_ratio'] <= max_top_wick_ratio
+    d['long_lower_wick'] = d['lower_wick_ratio'] >= min_bottom_wick_ratio
+    d = d.replace(np.nan,0)
+    d['enter_trade'] = (~(d['body_width']==0)).astype(bool) & (d['short_upper_wick']).astype(bool) & (d['long_lower_wick']).astype(bool)
+    return d['enter_trade']
   else:
-    d['upper_wick'] = d['High'] - d[['Close','Open']].max()
-    d['lower_wick'] = d[['Close','Open']].min() - d['Low']
-
-  d['upper_wick_ratio'] = d['upper_wick']/d['body_width']
-  d['lower_wick_ratio'] = d['lower_wick']/d['body_width']
-  d['short_upper_wick'] = d['upper_wick_ratio'] <= max_top_wick_ratio
-  d['long_lower_wick'] = d['lower_wick_ratio'] >= min_bottom_wick_ratio
-  d['enter_trade'] = (~(d['body_width']==0)).astype(bool) & (d['short_upper_wick']).astype(bool) & (d['long_lower_wick']).astype(bool)
-  return d['enter_trade']
-
-
+    body_width = abs(d['Close']-d['Open'])
+    if body_width == 0:
+      return False
+    upper_wick = d['High'] -max(d['Close'],d['Open'])
+    lower_wick = min(d['Close'],d['Open']) - d['Low']
+    upper_wick_ratio = upper_wick/body_width
+    lower_wick_ratio = lower_wick/body_width
+    return body_width != 0 and upper_wick_ratio <= max_top_wick_ratio and lower_wick_ratio >= min_bottom_wick_ratio
+  
+  
 class HangingManContinuationStrategy(bt.Strategy):
 
     params = (
