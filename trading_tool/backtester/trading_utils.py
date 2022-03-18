@@ -5,6 +5,16 @@ import pandas_market_calendars as mcal
 import numpy as np
 
 
+def merge_trade_indices_with_data(df, trade_indices_df):
+  df['Traded Candles'] = 0
+  df['Trade Length'] = 0
+  df['Traded Candles'].iloc[list(trade_indices_df['bar_openings'])] = 1
+  #df['Trade Length'].iloc[list(trade_indices_df['bar_openings'])] = trade_indices_df['Closing Bars'] - trade_indices_df['Opening Bars']
+  return df
+
+
+
+
 def get_prior_data(file_path: str, fields: tuple = ('High','Low','Open','Close','Volume'),index_col: str = 'Date'):
   data = pd.read_csv(file_path,index_col=index_col)[list(fields)]
   data = format_index(data)
