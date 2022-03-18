@@ -20,7 +20,7 @@ class HangingManReversalStrategy(BracketStrategy):
     def long_criteria_method(self,data_line):
       return short_criteria(data_line, self.params)
     
-    def short_criteria_methods(self,data_line):
+    def short_criteria_method(self,data_line):
       return long_criteria(data_line, self.params)
     
     def get_limit_stop_price(self, data_line, direction, params):
