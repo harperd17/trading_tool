@@ -46,13 +46,18 @@ class EquityCurve(bt.analyzers.Analyzer):
       
       
 class BracketPrices(bt.analyzers.Analyzer):
+  attributes = ('limits','stops','bar_openings')
   def get_analysis(self):
-    return {'Limit Prices':self.limits,
-            'Stop Prices':self.stops,
-            'Bar Openings':self.bar_openings}
+    return_attributes = {}
+    for att in self.attributes:
+      return_attributes[att] = getattr(self.strategy,att)
+    return pd.DataFrame(return_attributes)
   
   
 #-------------------------evaluation functions - these use the results from the strategy-------------------------
+def get_bracket_prices(results):
+  return results.analyzers.bracket_prices.get_analysis()
+
 
 def get_trade_analysis(results):
     trade_analysis_format = {
