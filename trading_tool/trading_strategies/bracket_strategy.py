@@ -7,7 +7,6 @@ class BracketStrategy(bt.Strategy):
     limits = ()
     stops = ()
     bar_openings = ()
-    params = (('strategy_name','Basic Bracket Strategy'))
     def __init__(self):
         self.data_close = self.datas[0].close
         self.data_open = self.datas[0].open
