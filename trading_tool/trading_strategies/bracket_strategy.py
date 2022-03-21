@@ -30,21 +30,21 @@ class BracketStrategy(bt.Strategy):
     @abstractmethod
     def next(self):
       data_line = pd.Series([self.data_close[0],self.data_open[0],self.data_high[0],self.data_low[0]], index = ['Close','Open','High','Low'])
-      if self.long_criteria_method(data_line, self.params):
+      if self.long_criteria_method(data_line):
           # enter long bracket
-          limit_price, stop_price = self.get_limit_stop_price(data_line, 'long', self.params)
+          limit_price, stop_price = self.get_limit_stop_price(data_line, 'long')
           bracket_buy = self.buy_bracket(limitprice=limit_price, stopprice=stop_price)
           # record the trade prices
-          self.limits.append(limit_price)
-          self.stops.append(stop_price)
-          self.bar_openings.append(self.current_bar)
+          self.limits = self.limits + (limit_price,)
+          self.stops = self.stops + (stop_price,)
+          self.bar_openings = self.bar_openings + (self.current_bar,)
 
-      elif self.short_criteria_method(data_line, self.params):
+      elif self.short_criteria_method(data_line):
           # enter short bracket
-          limit_price, stop_price = self.get_limit_stop_price(data_line, 'short', self.params)
+          limit_price, stop_price = self.get_limit_stop_price(data_line, 'short')
           bracket_sell = self.sell_bracket(limitprice=limit_price, stopprice=stop_price)
           # record the trade prices
-          self.limits.append(limit_price)
-          self.stops.append(stop_price)
-          self.bar_openings.append(self.current_bar)
+          self.limits = self.limits + (limit_price,)
+          self.stops = self.stops + (stop_price,)
+          self.bar_openings = self.bar_openings + (self.current_bar,)
       self.current_bar += 1
