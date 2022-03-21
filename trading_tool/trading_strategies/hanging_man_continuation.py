@@ -1,11 +1,12 @@
 import backtrader as bt
 import pandas as pd
+import numpy as np
 from trading_tool.trading_strategies.bracket_strategy import BracketStrategy
 
 
 def long_criteria(d, params):
-  min_top_wick_ratio = params['min_long_wick_ratio']
-  max_bottom_wick_ratio = params['max_short_wick_ratio']
+  min_top_wick_ratio = params.min_long_wick_ratio
+  max_bottom_wick_ratio = params.max_short_wick_ratio
   if isinstance(d,pd.DataFrame):
     d['body_width'] = (d['Close']-d['Open']).abs()
     d['upper_wick'] = d['High'] - d[['Close','Open']].max(axis=1)
@@ -28,8 +29,8 @@ def long_criteria(d, params):
     return body_width != 0 and upper_wick_ratio >= min_top_wick_ratio and lower_wick_ratio <= max_bottom_wick_ratio
 
 def short_criteria(d, params):
-  min_bottom_wick_ratio = params['min_long_wick_ratio']
-  max_top_wick_ratio = params['max_short_wick_ratio']
+  min_bottom_wick_ratio = params.min_long_wick_ratio
+  max_top_wick_ratio = params.max_short_wick_ratio
   if isinstance(d,pd.DataFrame):
     d['body_width'] = (d['Close']-d['Open']).abs()
     d['upper_wick'] = d['High'] - d[['Close','Open']].max(axis=1)
@@ -74,6 +75,8 @@ class HangingManContinuationStrategy(BracketStrategy):
       if direction == 'long':
         limit_price = data_line['Close'] + (data_line['High'] - data_line['Close'])*self.params.fill_ratio
         stop_price = data_line['Close'] - (limit_price-data_line['Close'])*self.params.risk_to_reward_ratio
+        return limit_price, stop_price
       elif direction == 'short':
         limit_price = data_line['Close'] - (data_line['Close'] - data_line['Low'])*self.params.fill_ratio
         stop_price = data_line['Close'] + (data_line['Close'] - limit_price)*self.params.risk_to_reward_ratio
+        return limit_price, stop_price
