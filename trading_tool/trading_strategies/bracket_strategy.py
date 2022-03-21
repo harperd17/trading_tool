@@ -1,5 +1,5 @@
 import backtrader as bt
- 
+from abc import abstractmethod
 
 
 class BracketStrategy(bt.Strategy):
