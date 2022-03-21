@@ -70,7 +70,7 @@ class HangingManContinuationStrategy(BracketStrategy):
     def short_criteria_method(self,data_line):
       return short_criteria(data_line, self.params)
     
-    def get_limit_stop_price(self, data_line, direction, params):
+    def get_limit_stop_price(self, data_line, direction):
       if direction == 'long':
         limit_price = data_line['Close'] + (data_line['High'] - data_line['Close'])*self.params.fill_ratio
         stop_price = data_line['Close'] - (limit_price-data_line['Close'])*self.params.risk_to_reward_ratio
