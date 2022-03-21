@@ -16,15 +16,15 @@ class BracketStrategy(bt.Strategy):
         self.current_bar = 1
         
     @abstractmethod
-    def long_criteria_method(self, data_line, params):
+    def long_criteria_method(self, data_line):
       ...
       
     @abstractmethod
-    def short_criteria_method(self, data_line, params):
+    def short_criteria_method(self, data_line):
       ...
       
     @abstractmethod
-    def get_limit_stop_price(self, data_line, direction, params):
+    def get_limit_stop_price(self, data_line, direction):
       ...
       
     @abstractmethod
