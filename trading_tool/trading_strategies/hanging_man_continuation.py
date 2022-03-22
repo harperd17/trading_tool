@@ -59,7 +59,14 @@ class HangingManContinuationStrategy(BracketStrategy):
         ('min_long_wick_ratio',2.0),
         ('max_short_wick_ratio',1.0),
         ('risk_to_reward_ratio',2.0),
-        ('fill_ratio',1.5)
+        ('fill_ratio',1.5),
+        ('sma_period', 21),
+        ('ema_period',21),
+    )
+    
+    indicators = (
+    {'params':{'period':self.params.sma_period},'class':MySMA,'name':'sma_'+str(self.params.sma_period)},
+    {'paras':{'period':self.params.ema_period},'class':MyEMA, 'name':'ema_'+str(self.params.ema_period)},
     )
 
     def __init__(self):
@@ -80,3 +87,7 @@ class HangingManContinuationStrategy(BracketStrategy):
         limit_price = data_line['Close'] - (data_line['Close'] - data_line['Low'])*self.params.fill_ratio
         stop_price = data_line['Close'] + (data_line['Close'] - limit_price)*self.params.risk_to_reward_ratio
         return limit_price, stop_price
+    def create_dataframe(self, data):
+      for ind in HangingManContinuationStrategy.indicators:
+        data[ind['name']] = ind['class'].matrix_method(data, **ind['params'])
+      return data
