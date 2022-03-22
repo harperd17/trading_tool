@@ -65,8 +65,8 @@ class HangingManContinuationStrategy(BracketStrategy):
     )
     
     indicators = (
-    {'params':{'period':self.params.sma_period},'class':MySMA,'name':'sma_'+str(self.params.sma_period)},
-    {'paras':{'period':self.params.ema_period},'class':MyEMA, 'name':'ema_'+str(self.params.ema_period)},
+    {'params':{'period':params.sma_period},'class':MySMA,'name':'sma_'+str(params.sma_period)},
+    {'paras':{'period':params.ema_period},'class':MyEMA, 'name':'ema_'+str(params.ema_period)},
     )
 
     def __init__(self):
