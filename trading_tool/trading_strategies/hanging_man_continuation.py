@@ -68,7 +68,7 @@ class HangingManContinuationStrategy(BracketStrategy):
     }
     
     indicators = (
-    {'params':{'period':indicator_params['sma_period']},'class':MySMA,'name':'sma_'+str(indicator_params['sma_period')},
+    {'params':{'period':indicator_params['sma_period']},'class':MySMA,'name':'sma_'+str(indicator_params['sma_period'])},
     {'paras':{'period':indicator_params['ema_period']},'class':MyEMA, 'name':'ema_'+str(indicator_params['ema_period'])},
     )
 
