@@ -60,13 +60,16 @@ class HangingManContinuationStrategy(BracketStrategy):
         ('max_short_wick_ratio',1.0),
         ('risk_to_reward_ratio',2.0),
         ('fill_ratio',1.5),
-        ('sma_period', 21),
-        ('ema_period',21),
     )
     
+    indicator_params = {
+        'sma_period':21,
+        'ema_period':21
+    }
+    
     indicators = (
-    {'params':{'period':params.sma_period},'class':MySMA,'name':'sma_'+str(params.sma_period)},
-    {'paras':{'period':params.ema_period},'class':MyEMA, 'name':'ema_'+str(params.ema_period)},
+    {'params':{'period':indicator_params.sma_period},'class':MySMA,'name':'sma_'+str(indicator_params.sma_period)},
+    {'paras':{'period':indicator_params.ema_period},'class':MyEMA, 'name':'ema_'+str(indicator_params.ema_period)},
     )
 
     def __init__(self):
