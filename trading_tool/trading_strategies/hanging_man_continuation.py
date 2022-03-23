@@ -1,6 +1,7 @@
 import backtrader as bt
 import pandas as pd
 import numpy as np
+import talib
 from trading_tool.trading_strategies.bracket_strategy import BracketStrategy
 from trading_tool.backtester.indicators import SMA, EMA
 
