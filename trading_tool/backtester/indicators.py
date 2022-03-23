@@ -1,4 +1,5 @@
 import backtrader as bt
+import talib
 
 class SMA(bt.Indicator):
     lines = ('sma',)
