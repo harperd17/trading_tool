@@ -2,6 +2,7 @@ import backtrader as bt
 import pandas as pd
 import numpy as np
 from trading_tool.trading_strategies.bracket_strategy import BracketStrategy
+from trading_tool.backtester.indicators import SMA, EMA
 
 
 def long_criteria(d, params):
@@ -68,8 +69,8 @@ class HangingManContinuationStrategy(BracketStrategy):
     }
     
     indicators = (
-    {'params':{'period':indicator_params['sma_period']},'class':MySMA,'name':'sma_'+str(indicator_params['sma_period'])},
-    {'paras':{'period':indicator_params['ema_period']},'class':MyEMA, 'name':'ema_'+str(indicator_params['ema_period'])},
+    {'params':{'period':indicator_params['sma_period']},'class':SMA,'name':'sma_'+str(indicator_params['sma_period'])},
+    {'paras':{'period':indicator_params['ema_period']},'class':EMA, 'name':'ema_'+str(indicator_params['ema_period'])},
     )
 
     def __init__(self):
