@@ -67,15 +67,16 @@ class HangingManContinuationStrategy(BracketStrategy):
     
     
 #     indicators = (
-#     {'params':{'period':indicator_params['sma_period']},'class':SMA,'name':'sma_'+str(indicator_params['sma_period'])},
-#     {'params':{'period':indicator_params['ema_period']},'class':EMA, 'name':'ema_'+str(indicator_params['ema_period'])},
+#     {'params':{'period':self.p.indicator_params['sma_period']},'class':SMA,'name':'sma_'+str(self.p.indicator_params['sma_period'])},
+#     {'params':{'period':self.p.indicator_params['ema_period']},'class':EMA, 'name':'ema_'+str(self.p.indicator_params['ema_period'])},
 #     )
 
     def __init__(self):
       super().__init__()
+      print(type(self.params))
       self.indicators = (
-                    {'params':{'period':indicator_params['sma_period']},'class':SMA,'name':'sma_'+str(self.p.indicator_params['sma_period'])},
-                    {'params':{'period':indicator_params['ema_period']},'class':EMA, 'name':'ema_'+str(self.p.indicator_params['ema_period'])},
+                    {'params':{'period':self.p.indicator_params['sma_period']},'class':SMA,'name':'sma_'+str(self.p.indicator_params['sma_period'])},
+                    {'params':{'period':self.p.indicator_params['ema_period']},'class':EMA, 'name':'ema_'+str(self.p.indicator_params['ema_period'])},
                     )
       
     def long_criteria_method(self,data_line):
