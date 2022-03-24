@@ -73,10 +73,12 @@ class HangingManContinuationStrategy(BracketStrategy):
 
     def __init__(self):
       super().__init__()
-      print(type(self.params))
-      self.indicators = (
-                    {'params':{'period':self.p.indicator_params['sma_period']},'class':SMA,'name':'sma_'+str(self.p.indicator_params['sma_period'])},
-                    {'params':{'period':self.p.indicator_params['ema_period']},'class':EMA, 'name':'ema_'+str(self.p.indicator_params['ema_period'])},
+      self.indicators = self.get_indicators(self.p.indicator_params)
+    
+    def get_indicators(indicator_params):
+      return (
+                    {'params':{'period':indicator_params['sma_period']},'class':SMA,'name':'sma_'+str(indicator_params['sma_period'])},
+                    {'params':{'period':indicator_params['ema_period']},'class':EMA, 'name':'ema_'+str(indicator_params['ema_period'])},
                     )
       
     def long_criteria_method(self,data_line):
@@ -95,7 +97,7 @@ class HangingManContinuationStrategy(BracketStrategy):
         stop_price = data_line['Close'] + (data_line['Close'] - limit_price)*self.params.risk_to_reward_ratio
         return limit_price, stop_price
       
-    def create_dataframe(self, data):
-      for ind in self.indicators:
+    def create_dataframe(data, indicator_params):
+      for ind in get_indicators(indicator_params):
         data[ind['name']] = ind['class'].matrix_method(data, **ind['params'])
       return data
