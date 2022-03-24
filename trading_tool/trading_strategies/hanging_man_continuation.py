@@ -61,20 +61,22 @@ class HangingManContinuationStrategy(BracketStrategy):
         ('max_short_wick_ratio',1.0),
         ('risk_to_reward_ratio',2.0),
         ('fill_ratio',1.5),
+        ('indicator_params':{'sma_period':21,
+                             'ema_period':21}
     )
     
-    indicator_params = {
-        'sma_period':21,
-        'ema_period':21
-    }
     
-    indicators = (
-    {'params':{'period':indicator_params['sma_period']},'class':SMA,'name':'sma_'+str(indicator_params['sma_period'])},
-    {'params':{'period':indicator_params['ema_period']},'class':EMA, 'name':'ema_'+str(indicator_params['ema_period'])},
-    )
+#     indicators = (
+#     {'params':{'period':indicator_params['sma_period']},'class':SMA,'name':'sma_'+str(indicator_params['sma_period'])},
+#     {'params':{'period':indicator_params['ema_period']},'class':EMA, 'name':'ema_'+str(indicator_params['ema_period'])},
+#     )
 
     def __init__(self):
       super().__init__()
+      self.indicators = (
+                    {'params':{'period':indicator_params['sma_period']},'class':SMA,'name':'sma_'+str(self.p.indicator_params['sma_period'])},
+                    {'params':{'period':indicator_params['ema_period']},'class':EMA, 'name':'ema_'+str(self.p.indicator_params['ema_period'])},
+                    )
       
     def long_criteria_method(self,data_line):
       return long_criteria(data_line, self.params)
@@ -91,7 +93,8 @@ class HangingManContinuationStrategy(BracketStrategy):
         limit_price = data_line['Close'] - (data_line['Close'] - data_line['Low'])*self.params.fill_ratio
         stop_price = data_line['Close'] + (data_line['Close'] - limit_price)*self.params.risk_to_reward_ratio
         return limit_price, stop_price
+      
     def create_dataframe(self, data):
-      for ind in HangingManContinuationStrategy.indicators:
+      for ind in self.indicators:
         data[ind['name']] = ind['class'].matrix_method(data, **ind['params'])
       return data
