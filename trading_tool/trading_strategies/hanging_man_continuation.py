@@ -75,6 +75,7 @@ class HangingManContinuationStrategy(BracketStrategy):
       super().__init__()
       self.indicators = self.get_indicators(self.p.indicator_params)
     
+    @staticmethod
     def get_indicators(indicator_params):
       return (
                     {'params':{'period':indicator_params['sma_period']},'class':SMA,'name':'sma_'+str(indicator_params['sma_period'])},
