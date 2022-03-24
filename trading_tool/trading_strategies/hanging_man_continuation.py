@@ -61,7 +61,7 @@ class HangingManContinuationStrategy(BracketStrategy):
         ('max_short_wick_ratio',1.0),
         ('risk_to_reward_ratio',2.0),
         ('fill_ratio',1.5),
-        ('indicator_params':{'sma_period':21,
+        ('indicator_params',{'sma_period':21,
                              'ema_period':21}
     )
     
