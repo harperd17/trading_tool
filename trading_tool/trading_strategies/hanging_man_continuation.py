@@ -99,6 +99,6 @@ class HangingManContinuationStrategy(BracketStrategy):
         return limit_price, stop_price
       
     def create_dataframe(data, indicator_params):
-      for ind in get_indicators(indicator_params):
+      for ind in HangingManContinuationStrategy.get_indicators(indicator_params):
         data[ind['name']] = ind['class'].matrix_method(data, **ind['params'])
       return data
