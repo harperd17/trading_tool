@@ -165,4 +165,8 @@ def run_strategy(data, StrategyClass, analyzers, evaluation_func, strategy_param
     run_result = cerebro.run()[0]
     #print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
     strategy_evaluation = evaluation_func(run_result)
+    if not strategy_params_dict is None:
+      if 'indicator_params' in strategy_params_dict.keys():
+        dat_indicators = StrategyClass.create_dataframe(dat.copy(), strategy_params_dict['indicator_params'])
+        print(dat_indicators.columns)
     return strategy_evaluation
