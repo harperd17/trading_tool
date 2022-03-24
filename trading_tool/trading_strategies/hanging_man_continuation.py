@@ -63,7 +63,7 @@ class HangingManContinuationStrategy(BracketStrategy):
         ('fill_ratio',1.5),
         ('indicator_params',{'sma_period':21,
                              'ema_period':21}
-    )
+        ))
     
     
 #     indicators = (
