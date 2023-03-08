@@ -1,0 +1,11 @@
+# pyc files
+*.pyc
+
+# egg for local editable installation
+*.egg-info
+
+# environment set up stuff
+*trading_tool_venv
+
+# visual studio stuff
+*.vs
