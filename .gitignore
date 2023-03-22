@@ -9,3 +9,6 @@
 
 # visual studio stuff
 *.vs
+
+# jupyter notebook checkpoints
+*.ipynb_checkpoints
